@@ -17,30 +17,33 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAppContext } from "../AppProvvider";
+import { IUser } from "@/server/models/User";
 ''
 const formSchema = z.object({
     username: z.string().min(3).max(20),
 });
 
 const Page: NextPage = () => {
-    const { userLogedIn, setUserLogedIn } = useAppContext();
-    const [avatarChangeUrl, setAvatarChangeUrl] = useState<string | null | undefined>(userLogedIn?.avatar);
+    const { currentUser, setCurrentUser } = useAppContext();
+    const [avatarChangeUrl, setAvatarChangeUrl] = useState<string | null | undefined>(currentUser?.profileImage);
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: userLogedIn?.username || "",
+            username: currentUser?.username || "",
         },
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         const { username } = values;
-        const avatar = avatarChangeUrl;
-        const payload = { username, avatar };
+        const profileImage = avatarChangeUrl;
+        const payload = { username, profileImage };
+        console.log(currentUser)
 
-        axios.put(`/api/users/${userLogedIn?.id}/update`, payload)
+        axios.put(`/api/users/${currentUser?._id}/update`, payload)
             .then((res) => {
-                const { user } = res.data;
-                setUserLogedIn(user);
+                const {user}:{user:IUser} = res.data;
+                console.log(user);
+                setCurrentUser(user);
                 toast("Cập nhật thông tin thành công");
                 window.location.reload();
             }).catch((err) => {
@@ -67,7 +70,6 @@ const Page: NextPage = () => {
                 });
         }
     }
-
 
     return (
         <>

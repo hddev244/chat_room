@@ -1,11 +1,15 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import ChatList from "@/components/ChatList";
+import ContactList from "@/components/ContactList";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-      <Button  >Click me</Button>
+    <div className="flex-1 w-full grid grid-cols-3 gap-8 p-4">
+      <div className="col-span-1 h-full">
+        <ChatList />
+      </div>
+      <div className="col-span-2 h-full">
+        <ContactList />
+      </div>
      </div>
   );
 }

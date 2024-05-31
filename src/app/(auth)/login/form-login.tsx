@@ -28,7 +28,7 @@ const formSchema = z.object({
 
 export default function FormLogin() {
     const router = useRouter();
-    const { setUserLogedIn } = useAppContext();
+    const { setCurrentUser } = useAppContext();
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -47,7 +47,7 @@ export default function FormLogin() {
             axios.post("/api/auth/login", payload)
                 .then(res => {
                     const { user } = res.data;
-                    setUserLogedIn(user);
+                    setCurrentUser(user);
                     toast("Thành công", {
                         description: res.data.message,
                     })

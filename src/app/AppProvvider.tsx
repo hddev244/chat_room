@@ -1,19 +1,13 @@
 'use client'
 
+import { IUser } from "@/server/models/User";
 import { createContext, useContext, useState } from "react"
-
-export type User = {
-    id?: string;
-    username?: string;
-    email?: string;
-    avatar?: string;
-}
 
 const AppContext = createContext({
     token: '',
     setToken: (token: string) => {},
-    userLogedIn: {} as User | null,
-    setUserLogedIn: (user: User| null) => {}
+    currentUser: {} as IUser | null,
+    setCurrentUser: (user: IUser| null) => {}
 });
 
 const useAppContext = () => {
@@ -27,16 +21,16 @@ const useAppContext = () => {
 const AppProvider = ({ 
     children,
     inititalToken = '',
-    inititalUserLogined = {} as User | null 
+    inititalCurrentUser = {} as IUser | null 
 }: {
     children: React.ReactNode;
     inititalToken?: string;
-    inititalUserLogined?: User | null;
+    inititalCurrentUser?: IUser | null;
 }) => {
     const [token, setToken] = useState(inititalToken);
-    const [userLogedIn, setUserLogedIn] = useState<User | null>(inititalUserLogined); // Updated type and added default value
+    const [currentUser, setCurrentUser] = useState<IUser | null>(inititalCurrentUser); // Updated type and added default value
     return (
-        <AppContext.Provider value={{token,setToken,userLogedIn,setUserLogedIn}}>
+        <AppContext.Provider value={{token,setToken,currentUser,setCurrentUser}}>
             {children }
         </AppContext.Provider>
         )

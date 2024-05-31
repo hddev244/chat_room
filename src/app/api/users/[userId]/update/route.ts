@@ -1,9 +1,10 @@
-import User from "@/server/models/User";
+import User, { IUser } from "@/server/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (req: NextRequest, params: { params: { userId: string } }): Promise<NextResponse> => {
     const { userId } = params.params;
-    const { username, email, password, avatar } = await req.json();
+    console.log(userId);
+    const { username, email, password, profileImage } = await req.json();
     try {
         const userExist = await User.findById(userId);
         if (!userExist) {
@@ -22,17 +23,17 @@ export const PUT = async (req: NextRequest, params: { params: { userId: string }
             userExist.password = password;
         }
 
-        if (avatar) {
-            userExist.profileImage = avatar;
+        if (profileImage) {
+            userExist.profileImage = profileImage;
         }
 
         const userSave = await userExist.save();
 
-        const user = {
-            id: userSave.id,
+        const user:IUser = {
+            _id: userSave._id,
             username: userSave.username,
             email: userSave.email,
-            avatar: userSave.profileImage,
+            profileImage: userSave.profileImage,
         }
 
         return NextResponse.json(

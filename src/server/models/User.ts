@@ -30,4 +30,13 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
+export interface IUser {
+    _id?: string;
+    username?: string;
+    email?: string;
+    password?: string;
+    profileImage?: string;
+    chats?: string[];
+}
+
 export default User;

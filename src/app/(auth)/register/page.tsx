@@ -8,7 +8,7 @@ const Page: NextPage = () => {
 
     return (
         <>
-            <div className="w-dvw h-dvh bg-gray-100 flex items-center justify-center">
+            <div className="w-dvw h-dvh flex items-center justify-center">
                         <FormRegister />
             </div>
         </>

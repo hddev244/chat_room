@@ -1,4 +1,4 @@
-import User from "@/server/models/User";
+import User, { IUser } from "@/server/models/User";
 import { cp } from "fs";
 import { SignJWT } from "jose";
 import { NextRequest, NextResponse } from "next/server";
@@ -26,13 +26,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .setJti(nanoid())
             .setIssuedAt()
             .setExpirationTime('2h')
-            .sign(new TextEncoder().encode(getJwtSecretKey()));
+            .sign(new TextEncoder().encode(getJwtSecretKey())); 
 
-        const user = {
-            id: userExist.id,
+        const user:IUser = {
+            _id: userExist.id,
             username: userExist.username,
             email: userExist.email,
-            avatar: userExist.profileImage,
+            profileImage: userExist.profileImage,
         }
         
         return NextResponse.json(

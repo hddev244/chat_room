@@ -7,16 +7,17 @@ import axios from "axios";
 import { useAppContext } from "@/app/AppProvvider";
 import { toast } from "sonner";
 import { Card } from "./ui/card";
+import { ModeToggle } from "@/components/ModeToggle";
 
 const TopBar = () => {
-    const { userLogedIn,setUserLogedIn } = useAppContext();
+    const { currentUser ,setCurrentUser } = useAppContext();
     const pathName = usePathname();
     const router = useRouter();
     const handleLogout = () => {
         axios.post("/api/auth/logout")
             .then(res => {
                 console.log(res.data.message);
-                setUserLogedIn(null);
+                setCurrentUser(null);
                 router.push("/login");
             }
         )
@@ -53,10 +54,11 @@ const TopBar = () => {
                 </button>
                 <Link href="/profile">
                     <Avatar className="size-16">
-                        <AvatarImage src={userLogedIn?.avatar || '/images/commons/persion.webp'} alt="@hd-chat" />
+                        <AvatarImage src={currentUser?.profileImage || '/images/commons/persion.webp'} alt="@hd-chat" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                 </Link>
+                <ModeToggle />
             </div>
         </Card>
     );
