@@ -28,7 +28,7 @@ const formSchema = z.object({
 
 export default function FormLogin() {
     const router = useRouter();
-    const { setCurrentUser } = useAppContext();
+    const { setCurrentUser,setToken } = useAppContext();
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -46,9 +46,11 @@ export default function FormLogin() {
         }
         axios.post("/api/auth/login", payload)
             .then(res => {
-                const { user } = res.data;
+                const { user, token } = res.data;
                 setCurrentUser(user);
-                toast("Thành công",
+                setToken(token);
+                console.log(res.data);
+                toast("Đăng nhập thành công!",
                     {   
                         description: res.data.message,
                     })
@@ -57,7 +59,7 @@ export default function FormLogin() {
                 }, 500)
             })
             .catch(err => {
-                toast("Lỗi", {
+                toast("Lỗi máy chủ, vui lòng thử lại sau!", {
                     description: err.response.data.message,
                 })
             })

@@ -30,7 +30,7 @@ const TopBar = () => {
         })
     }
     return (
-        <Card className="flex p-4">
+        <div className="flex p-4 border-b bg-card text-card-foreground shadow-sm">
             <div className="flex-1">
                 <Link href="/">
                     <h1 className="text-5xl font-semibold cursor-pointer">HD Chat</h1>
@@ -60,7 +60,7 @@ const TopBar = () => {
                 </Link>
                 <ModeToggle />
             </div>
-        </Card>
+        </div>
     );
 }
 

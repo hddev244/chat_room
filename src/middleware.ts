@@ -3,8 +3,6 @@ import { verifyAuth } from "./server/libs/auth";
 
 export async function middleware(req:NextRequest) {
     const token = req.cookies.get('token')?.value;
-
-    console.log('Token',token);
     
     const verifiedToken = token && (await verifyAuth(token).catch((error : any) => {
         console.log('Token is invalid' + error);
@@ -21,9 +19,8 @@ export async function middleware(req:NextRequest) {
     if(!verifiedToken){
         return NextResponse.redirect(new URL('/login',req.url));
     }
-
 }
 
 export const config = {
-    matcher : ['/login','/dashboard']
+    matcher : ['/login','/chats','/','/contacts','/users/[userId]/chats']
 }

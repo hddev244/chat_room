@@ -1,11 +1,10 @@
 import User, { IUser } from "@/server/models/User";
-import { cp } from "fs";
 import { SignJWT } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcryptjs';
 import { nanoid } from "nanoid";
-import { sign } from "crypto";
 import { getJwtSecretKey } from "@/server/libs/auth";
+import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
     const payload = await req.json();
@@ -27,22 +26,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             .setIssuedAt()
             .setExpirationTime('2h')
             .sign(new TextEncoder().encode(getJwtSecretKey())); 
-
+        console
         const user:IUser = {
             _id: userExist.id,
             username: userExist.username,
             email: userExist.email,
             profileImage: userExist.profileImage,
         }
+
+        cookies().set('user', JSON.stringify(user), {
+            httpOnly: true,
+            path: '/',
+            maxAge: 7200,
+            sameSite: 'strict',
         
-        return NextResponse.json(
-            { user: user},
-            {
-                status: 200,
-                headers: {
-                    'Set-Cookie': `token=${token},user=${JSON.stringify(user)}; HttpOnly; Path=/; Max-Age=7200; SameSite=Strict;`,
-                },
-            });
+        });
+        
+        cookies().set('token', token, {
+            httpOnly: true,
+            path: '/',
+            maxAge: 7200,
+            sameSite: 'strict',
+        });
+        
+        return NextResponse.json({ user: user, token: token }, { status: 200})
     }
     catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });

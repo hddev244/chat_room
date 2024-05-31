@@ -13,6 +13,7 @@ import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
 import SpinperBasic from "./spinpers/spinper-basic";
+import { useRouter } from "next/navigation";
 
 const ContactList: NextPage = () => {
   const { currentUser } = useAppContext();
@@ -55,11 +56,12 @@ const ContactList: NextPage = () => {
   const [name, setName] = useState<string>('');
 
   // CREATE GROUP CHAT
+  const router = useRouter();
   const createGroupChat = async () => {
-    if(isGroup && !name) {
+    if (isGroup && !name) {
       toast('Please enter a group name', {
         position: 'top-right',
-        duration: 5000,  
+        duration: 5000,
       })
       return;
     }
@@ -72,13 +74,16 @@ const ContactList: NextPage = () => {
       currentUserId: currentUser?._id
     }
     await axios.post('/api/chats', payload)
-            .then((res) => {
-              console.log(res.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-              
+      .then((res) => {
+        toast('Chat created successfully');
+        setTimeout(() => {
+          router.push(`/chats/${res.data._id}`);
+        }, 1000)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
   }
 
   return (loading ? <SpinperBasic /> :
@@ -87,7 +92,7 @@ const ContactList: NextPage = () => {
         <div className="w-full">
           <Input
             type="text"
-            className="h-12"
+            className="h-14 rounded-3xl"
             value={searchContactValue}
             onChange={(e) => setSearchContactValue(e.target.value)}
             placeholder="search contacts..." />
@@ -101,21 +106,25 @@ const ContactList: NextPage = () => {
               <ScrollArea className="h-[38rem] p-1">
                 {
                   contacts && contacts.map((contact: IUser) => (
-                    <div key={contact._id} className="flex items-center space-x-8 p-4 hover:rounded-md hover:border cursor-pointer">
-                      <Checkbox 
-                        id={contact._id}
-                        checked={selectedContact.map((c) => c._id).includes(contact._id)}
-                        onClick={() => { handleSelectContact(contact);  
-                        }} />
-                      <Avatar className="size-20" >
-                        <AvatarImage src={contact.profileImage || '/images/commons/persion.webp'} alt="avatar" />
-                        <AvatarFallback></AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <label htmlFor={contact._id}>
-                          <div className="text-lg font-semibold">{contact.username}</div>
-                          <div className="text-sm text-gray-500">{contact.email}</div>
-                        </label>
+                    <div key={contact._id}  className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
+
+                      <div className="flex items-center space-x-8">
+                        <Checkbox
+                          id={contact._id}
+                          checked={selectedContact.map((c) => c._id).includes(contact._id)}
+                          onClick={() => {
+                            handleSelectContact(contact);
+                          }} />
+                        <Avatar className="size-20" >
+                          <AvatarImage src={contact.profileImage || '/images/commons/persion.webp'} alt="avatar" />
+                          <AvatarFallback></AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <label htmlFor={contact._id}>
+                            <div className="text-lg font-semibold">{contact.username}</div>
+                            <div className="text-sm text-gray-500">{contact.email}</div>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   ))
@@ -141,13 +150,13 @@ const ContactList: NextPage = () => {
                       <CardContent >
                         {
                           selectedContact.map((contact: IUser) => (
-                           <Button 
-                            onClick={() => handleSelectContact(contact)}
-                            key={contact._id} 
-                            variant={"secondary"} 
-                            className="me-2 mb-2">
-                            {contact.username}
-                           </Button>
+                            <Button
+                              onClick={() => handleSelectContact(contact)}
+                              key={contact._id}
+                              variant={"secondary"}
+                              className="me-2 mb-2">
+                              {contact.username}
+                            </Button>
                           ))
                         }
                       </CardContent>
@@ -156,7 +165,7 @@ const ContactList: NextPage = () => {
                 )
               }
             </Card>
-            <Button 
+            <Button
               onClick={createGroupChat}
               className="w-full text-3xl uppercase !py-8">Start a new chat</Button>
           </div>
