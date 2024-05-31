@@ -27,8 +27,8 @@ const ChatSchema = new mongoose.Schema({
         default: Date.now,
     },
     lastMessageAt: {
-        type: String,
-        default: '',
+        type: Date,
+        default: Date.now,
     },
 });
 
@@ -36,10 +36,10 @@ const Chat = mongoose.models.Chat || mongoose.model('Chat', ChatSchema);
 
 export interface IChat {
     _id?: string;
-    members?: string[];
-    messages?: string[];
+    members?: any[];
+    messages?: any[];
     name?: string;
-    isGroup?: boolean;
+    isGroup: boolean;
     groupImage?: string;
     creataAt?: Date;
     lastMessageAt?: string;

@@ -9,10 +9,7 @@ export const GET = async ():Promise<NextResponse> => {
 
         const allUser = await User.find();
 
-        return NextResponse.json({
-            message: "Success",
-            data: allUser,
-        },{status:200});
+        return NextResponse.json(allUser,{status:200});
     }
     catch (error) {
         return NextResponse.json({

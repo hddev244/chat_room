@@ -8,13 +8,11 @@ import axios from "axios";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { AvatarFallback } from "./ui/avatar";
 import { IUser } from "@/server/models/User";
-import SninperBasic from "./sninpers/sninper-basic";
-import { Car } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Radio } from "@radix-ui/react-radio-group";
-import { RadioGroupItem } from "./ui/radio-group";
 import { Checkbox } from "./ui/checkbox";
+import { toast } from "sonner";
+import SpinperBasic from "./spinpers/spinper-basic";
 
 const ContactList: NextPage = () => {
   const { currentUser } = useAppContext();
@@ -27,8 +25,8 @@ const ContactList: NextPage = () => {
       const url = searchContactValue !== "" ? `/api/users/searchContact/${searchContactValue}` : "/api/users";
       axios.get(url)
         .then((res) => {
-          console.log(res.data.data);
-          const users = res.data.data;
+          const users = res.data;
+          if (!users) return;
           setContacts(users?.filter((user: IUser) => user._id !== currentUser?._id));
           setLoading(false);
         });
@@ -56,7 +54,34 @@ const ContactList: NextPage = () => {
   /** ADD GROUP CHAT NAME  */
   const [name, setName] = useState<string>('');
 
-  return (loading ? <SninperBasic /> :
+  // CREATE GROUP CHAT
+  const createGroupChat = async () => {
+    if(isGroup && !name) {
+      toast('Please enter a group name', {
+        position: 'top-right',
+        duration: 5000,  
+      })
+      return;
+    }
+    const payload = {
+      chat: {
+        isGroup: isGroup,
+        name: isGroup ? name : '',
+        members: selectedContact.map((c) => c._id)
+      },
+      currentUserId: currentUser?._id
+    }
+    await axios.post('/api/chats', payload)
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+              
+  }
+
+  return (loading ? <SpinperBasic /> :
     <>
       <div className="size-full flex flex-col space-y-4">
         <div className="w-full">
@@ -131,7 +156,9 @@ const ContactList: NextPage = () => {
                 )
               }
             </Card>
-            <Button className="w-full text-3xl uppercase !py-8">Start a new chat</Button>
+            <Button 
+              onClick={createGroupChat}
+              className="w-full text-3xl uppercase !py-8">Start a new chat</Button>
           </div>
         </div>
       </div>

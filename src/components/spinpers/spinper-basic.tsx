@@ -1,4 +1,4 @@
-export default function SninperBasic() {
+export default function SpinperBasic() {
     return (
         <div className="size-full flex justify-center items-center">
             <div

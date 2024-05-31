@@ -40,26 +40,27 @@ export default function FormLogin() {
 
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-            const payload = {
-                username: values.username,
-                password: values.password
-            }
-            axios.post("/api/auth/login", payload)
-                .then(res => {
-                    const { user } = res.data;
-                    setCurrentUser(user);
-                    toast("Thành công", {
+        const payload = {
+            username: values.username,
+            password: values.password
+        }
+        axios.post("/api/auth/login", payload)
+            .then(res => {
+                const { user } = res.data;
+                setCurrentUser(user);
+                toast("Thành công",
+                    {   
                         description: res.data.message,
                     })
-                    setTimeout(() => {
-                        router.push("/")
-                    }, 500)
+                setTimeout(() => {
+                    router.push("/")
+                }, 500)
+            })
+            .catch(err => {
+                toast("Lỗi", {
+                    description: err.response.data.message,
                 })
-                .catch(err => {
-                    toast("Lỗi", {
-                        description: err.response.data.message,
-                    })
-                })
+            })
     }
     return (
         <>
