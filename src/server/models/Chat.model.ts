@@ -31,10 +31,10 @@ const ChatSchema = new Schema({
     },
 });
 
-const Chat = mongoose.models.Chat || mongoose.model('Chat', ChatSchema);
+const Chat = mongoose.models.Chat || mongoose.model<IChat>('Chat', ChatSchema);
 
 export interface IChat extends Document{
-    members?: any[];
+    members: any[] ;
     messages?: any[];
     name?: string;
     isGroup: boolean;
