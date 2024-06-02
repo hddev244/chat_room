@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+import mongoose,{Document, Schema} from "mongoose";
 
-const ChatSchema = new mongoose.Schema({
+const ChatSchema = new Schema({
     members: {
-        type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+        type: [{type: Schema.Types.ObjectId, ref: 'User'}],
         default: [],
     },
     messages: {
-        type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
+        type: [{type: Schema.Types.ObjectId, ref: 'Message'}],
         default: [],
     },
     name: {
@@ -33,8 +33,7 @@ const ChatSchema = new mongoose.Schema({
 
 const Chat = mongoose.models.Chat || mongoose.model('Chat', ChatSchema);
 
-export interface IChat {
-    _id?: string;
+export interface IChat extends Document{
     members?: any[];
     messages?: any[];
     name?: string;

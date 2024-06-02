@@ -1,43 +1,34 @@
 'use client'
+import { useAppContext } from "@/app/AppProvvider";
+import { ChatArea } from "@/components/ChatArea";
+import ChatList from "@/components/ChatList";
 import SpinperBasic from "@/components/spinpers/spinper-basic";
-import { IChat } from "@/server/models/Chat";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { IChat } from "@/server/models/Chat.model";
 import axios from "axios";
 import type { NextPage } from "next";
+import { useParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
 type Props = {
-    chatId: string;
-    }
+  chatId: string;
+}
 
-const Page: NextPage<{params : Props}> = (props) => {
-    const [loading, setLoading] = useState<boolean>(true);
-    const [chat, setChat] = useState<IChat>();
-    const { chatId } = props.params;
-    
-    const getChat = async () => {
-        await axios.get(`/api/chats/${chatId}`)
-        .then((res) => {
-            setChat(res.data);
-            console.log(res.data);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-        setLoading(false);
-    }
+const Page: NextPage<{ params: Props }> = (props) => {
+  const { currentUser } = useAppContext();
+  const [chat, setChat] = useState<IChat>();
+  const { chatId } = useParams();
 
-    useEffect(() => {
-        getChat();
-    },[])
   return (
-    loading ? <SpinperBasic/> :
-    <>
-    <h1>Chat</h1>
-    <p>{chatId}</p>
-    <h2>{chat?.name}</h2>
-    <p>{chat?.isGroup ? 'Group' : 'Personal'}</p>
-    <p>{chat?.members?.map((member) => member.username).join(', ')}</p>
-    </>
+      <>
+        <div className=" size-full grid grid-cols-3 gap-8 p-4">
+          <div className="col-span-1">
+            <ChatList />
+          </div>
+          <ChatArea chatId={chatId} />
+        </div>
+      </>
   )
 }
 

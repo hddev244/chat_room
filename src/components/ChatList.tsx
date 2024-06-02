@@ -5,7 +5,7 @@ import { useAppContext } from "@/app/AppProvvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SpinperBasic from "./spinpers/spinper-basic";
-import { IChat } from "@/server/models/Chat";
+import { IChat } from "@/server/models/Chat.model";
 import { Input } from "./ui/input";
 import { ChatBox } from "./ChatBox";
 

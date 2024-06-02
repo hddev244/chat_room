@@ -1,5 +1,5 @@
-import Chat, { IChat } from "@/server/models/Chat";
-import User, { IUser } from "@/server/models/User";
+import Chat, { IChat } from "@/server/models/Chat.model";
+import User, { IUser } from "@/server/models/User.model";
 import { connectToDatabase } from "@/server/mongodb";
 import { group } from "console";
 import { NextRequest, NextResponse } from "next/server";

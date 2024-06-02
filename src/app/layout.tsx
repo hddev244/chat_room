@@ -6,6 +6,7 @@ import TopBar from "@/components/TopBar";
 import AppProvider from "./AppProvvider";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
+import { parseJwt } from "@/server/libs/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className +
-        " flex flex-col h-dvh justify-start"
+        " flex flex-col  justify-start max-h-svh overflow-hidden h-svh "
       }>
         <ThemeProvider
           attribute="class"
@@ -42,7 +43,9 @@ export default function RootLayout({
         >
           <AppProvider inititalToken={token?.value} inititalCurrentUser={user} >
             <TopBar />
-            {children}
+            <div className="flex size-full flex-1">
+               {children}
+            </div>
           </AppProvider>
         </ThemeProvider>
       </body>

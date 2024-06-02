@@ -1,6 +1,6 @@
 'use client'
 
-import { IUser } from "@/server/models/User";
+import { IUser } from "@/server/models/User.model";
 import { createContext, useContext, useState } from "react"
 
 const AppContext = createContext({

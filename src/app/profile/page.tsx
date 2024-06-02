@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAppContext } from "../AppProvvider";
-import { IUser } from "@/server/models/User";
+import { IUser } from "@/server/models/User.model";
 ''
 const formSchema = z.object({
     username: z.string().min(3).max(20),

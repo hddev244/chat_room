@@ -1,4 +1,4 @@
-import { jwtVerify,SignJWT } from "jose";
+import { jwtVerify } from "jose";
 
 interface UserJwtPayload {
     jti: string;
@@ -20,5 +20,13 @@ export const verifyAuth = async (token: string) => {
     } catch (error) {
         console.log('Token is invalid' + error);
         throw new Error('Token is invalid');
+    }
+}
+
+export const parseJwt = (token: string) => {
+    try {
+        return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    } catch (e) {
+        return null;
     }
 }

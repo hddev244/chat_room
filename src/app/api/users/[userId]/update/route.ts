@@ -1,9 +1,8 @@
-import User, { IUser } from "@/server/models/User";
+import User, { IUser } from "@/server/models/User.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (req: NextRequest, params: { params: { userId: string } }): Promise<NextResponse> => {
     const { userId } = params.params;
-    console.log(userId);
     const { username, email, password, profileImage } = await req.json();
     try {
         const userExist = await User.findById(userId);

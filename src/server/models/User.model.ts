@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Document,Schema } from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -18,25 +18,22 @@ const UserSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         default: '',
-        required: false
     },
     chats : {
-        type : [{type : mongoose.Schema.Types.ObjectId, ref : 'Chat'}],
+        type : [{type : Schema.Types.ObjectId, ref : 'Chat'}],
         default : [],
-        required : false
     }
 
 }, { timestamps: true });
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 
-export interface IUser {
-    _id?: string;
-    username?: string;
-    email?: string;
+export interface IUser extends Document {
+    username: string;
+    email: string;
     password?: string;
-    profileImage?: string;
-    chats?: string[];
+    profileImage: string;
+    chats: any[];
 }
 
 export default User;

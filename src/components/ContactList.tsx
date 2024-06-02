@@ -7,7 +7,7 @@ import { useAppContext } from "@/app/AppProvvider";
 import axios from "axios";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { AvatarFallback } from "./ui/avatar";
-import { IUser } from "@/server/models/User";
+import { IUser } from "@/server/models/User.model";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";

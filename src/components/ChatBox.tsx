@@ -1,5 +1,6 @@
 import { useAppContext } from "@/app/AppProvvider";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import Link from "next/link";
 
 type Props = {
     chat: any;
@@ -8,10 +9,9 @@ type Props = {
 export function ChatBox({ chat }: Props) {
     const { currentUser } = useAppContext();
     const otherMembers = chat?.members?.filter((member: any) => member._id !== currentUser?._id);
-    console.log(otherMembers);
     const messages = chat?.messages;
-    return ( 
-        <div className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
+    return (
+        <Link href={`/chats/${chat._id}`} className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
             <div className="flex flex-1 space-x-4">
                 {
                     chat?.isGroup ? (
@@ -34,29 +34,60 @@ export function ChatBox({ chat }: Props) {
                 }
                 <div className="flex-1">
                     <div className="text-lg font-semibold flex justify-between">
-                        <span>{chat.name}</span>
-                        <span>{format(chat.lastMessageAt,7)}</span>
+                        {
+                            messages.length !== 0 ? (
+                                <>
+                                    <span>{chat?.isGroup ? chat.name:otherMembers[0].username}</span>
+                                    <span>{formatDate(messages[messages.length - 1]?.createdAt, 7)}</span>
+                                </>
+                            ) : (
+                                <>
+                                <span>{chat?.isGroup ? chat.name:otherMembers[0].username}</span>
+                                <span>{formatDate(chat.lastMessageAt, 7)}</span>
+                                </>
+                            )
+                            }
                     </div>
-                    <div className="text-sm text-gray-500">
-                        <p>{chat?.members?.map((member: any) => member.username).join(', ')}</p>
+                    {
+                        messages.length !== 0 ? (
+                            <div className="text-sm text-gray-500">
+                                <p>{messages[messages.length - 1]?.text}</p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="text-sm text-gray-500">
+                                    <p>Chưa có tin nhắn</p>
+                                </div>
+                            </>
+                        )
+                    }
+                     <div className="text-sm text-gray-500 flex space-x-1">
+                        {chat?.isGroup && chat?.members.map((member: any) => {
+                            return (
+                                <Avatar key={member._id} className="size-6 border border-gray-400 shadow-sm shadow-gray-300">
+                                        <AvatarImage src={member.profileImage || '/images/commons/person.webp'} alt="avatar" />
+                                        <AvatarFallback>MEM</AvatarFallback>
+                                </Avatar>
+                            )
+                        })}
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
-
-const format = (date: string, UTC: number) => {
-
+ 
+export const formatDate = (date: string, UTC: number) => {
     // Tạo đối tượng Date từ chuỗi thời gian
     const dateObject = new Date(date);
 
+    const thisTime = new Date(dateObject.getTime()+UTC*60*60*1000);
+
     // Lấy giờ và phút
-    const hours = dateObject.getUTCHours() + UTC;
-    const minutes = dateObject.getUTCMinutes();
+    const hours = thisTime.getUTCHours();
+    const minutes = thisTime.getUTCMinutes();
 
     // Định dạng giờ và phút
     const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-
     return formattedTime;
 }
