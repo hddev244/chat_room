@@ -22,22 +22,23 @@ const ContactList: NextPage = () => {
   const [contacts, setContacts] = useState<any[]>([]);
   const [searchContactValue, setSearchContactValue] = useState<string>('');
 
-  const getContacts = async () => {
-    try {
-      const url = searchContactValue !== "" ? `/api/users/searchContact/${searchContactValue}` : "/api/users";
-      axios.get(url)
-        .then((res) => {
-          const users = res.data;
-          if (!users) return;
-          setContacts(users?.filter((user: IUser) => user._id !== currentUser?._id));
-          setLoading(false);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  
 
   useEffect(() => {
+    const getContacts = async () => {
+      try {
+        const url = searchContactValue !== "" ? `/api/users/searchContact/${searchContactValue}` : "/api/users";
+        axios.get(url)
+          .then((res) => {
+            const users = res.data;
+            if (!users) return;
+            setContacts(users?.filter((user: IUser) => user._id !== currentUser?._id));
+            setLoading(false);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    }
     if (currentUser) getContacts();
   }, [searchContactValue, currentUser]);
 
@@ -106,11 +107,11 @@ const ContactList: NextPage = () => {
               <ScrollArea className="h-[38rem] p-1">
                 {
                   contacts && contacts.map((contact: IUser) => (
-                    <div key={contact._id} className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
+                    <div key={contact._id as string} className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
 
                       <div className="flex items-center space-x-8">
                         <Checkbox
-                          id={contact._id}
+                          id={contact._id as string}
                           checked={selectedContact.map((c) => c._id).includes(contact._id)}
                           onClick={() => {
                             handleSelectContact(contact);
@@ -120,7 +121,7 @@ const ContactList: NextPage = () => {
                           <AvatarFallback>M</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
-                          <label htmlFor={contact._id}>
+                          <label htmlFor={contact._id as string}>
                             <div className="text-lg font-semibold">{contact.username}</div>
                             <div className="text-sm text-gray-500">{contact.email}</div>
                           </label>
@@ -152,7 +153,7 @@ const ContactList: NextPage = () => {
                           selectedContact.map((contact: IUser) => (
                             <Button
                               onClick={() => handleSelectContact(contact)}
-                              key={contact._id}
+                              key={contact._id as string}
                               variant={"secondary"}
                               className="me-2 mb-2">
                               {contact.username}

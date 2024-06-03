@@ -49,8 +49,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // Save image to database
         const hostUrl = process.env.SERVER_HOST || "";
         const image = new Image({
+            type: type,
             name: fileName,
-            url: hostUrl+ "/images/"+tokenInfo.userId +"/" + fileName,
+            url: hostUrl+ "/api/images/" + fileName,
             path: path.join(localPath,"/", fileName),
             owner: tokenInfo.userId,
         });

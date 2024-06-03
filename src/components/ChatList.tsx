@@ -21,30 +21,30 @@ const ChatList = () => {
   const [search, setSearch] = useState<string>('');
   const { currentUser } = useAppContext();
 
-  const getChats = async () => {
-    if (!currentUser?._id) {
-      toast('User not found')
-      return;
-    };
-    try {
-      const url = `/api/users/${currentUser?._id}/chats`;
-      axios.get(url)
-        .then((res) => {
-          const chats: IChat[] = res.data;
-          setChats(chats);
-          setLoading(false);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  
 
   useEffect(() => {
+    const getChats = async () => {
+      if (!currentUser?._id) {
+        toast('User not found')
+        return;
+      };
+      try {
+        const url = `/api/users/${currentUser?._id}/chats`;
+        axios.get(url)
+          .then((res) => {
+            const chats: IChat[] = res.data;
+            setChats(chats);
+            setLoading(false);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    }
     pusherClient.subscribe(`chatList-${currentUser?._id}`);
     pusherClient.bind(`message`, () => {
       getChats();
     });
-
     return () => {
       pusherClient.unsubscribe(`chatList-${currentUser?._id}`);
       pusherClient.unbind(`message`);
@@ -52,8 +52,25 @@ const ChatList = () => {
   },[currentUser?._id])
 
   useEffect(() => {
+    const getChats = async () => {
+      if (!currentUser?._id) {
+        toast('User not found')
+        return;
+      };
+      try {
+        const url = `/api/users/${currentUser?._id}/chats`;
+        axios.get(url)
+          .then((res) => {
+            const chats: IChat[] = res.data;
+            setChats(chats);
+            setLoading(false);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    }
     if (currentUser?._id) getChats();
-  }, []);
+  }, [currentUser?._id]);
 
   return (loading ? <SpinperBasic /> :
     <div className="size-full flex flex-col space-y-4">

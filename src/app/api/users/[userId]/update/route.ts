@@ -26,21 +26,15 @@ export const PUT = async (req: NextRequest, params: { params: { userId: string }
             userExist.profileImage = profileImage;
         }
 
-        const userSave = await userExist.save();
+        const userSave: IUser = await userExist.save();
 
-        const user:IUser = {
-            _id: userSave._id,
-            username: userSave.username,
-            email: userSave.email,
-            profileImage: userSave.profileImage,
-        }
 
         return NextResponse.json(
-            { user, message: "Cập nhật thành công!" },
+            { user : userSave, message: "Cập nhật thành công!" },
             {
                 status: 200,
                 headers: {
-                    'Set-Cookie': `user=${JSON.stringify(user)}; HttpOnly; Path=/; Max-Age=7200; SameSite=Strict;`,
+                    'Set-Cookie': `user=${JSON.stringify(userSave)}; HttpOnly; Path=/; Max-Age=7200; SameSite=Strict;`,
                 },
             });
 

@@ -7,6 +7,7 @@ import AppProvider from "./AppProvvider";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { parseJwt } from "@/server/libs/auth";
+import { IUser } from "@/server/models/User.model";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,7 @@ export default function RootLayout({
 
   const token = cookieStore.get("token");
   const userStore = cookieStore.get("user")?.value;
-  let user: {} | undefined = undefined;
+  let user: IUser | undefined | null = undefined;
   if (userStore) {
     user = JSON.parse(userStore);
   }

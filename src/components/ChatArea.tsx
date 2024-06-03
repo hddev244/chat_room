@@ -16,8 +16,6 @@ type Props = {
 }
 
 export const ChatArea = (props: Props) => {
-    const [loading, setLoading] = useState<boolean>(true);
-
     const { currentUser } = useAppContext();
     const [chat, setChat] = useState<any>({});
     const [otherMembers, setOtherMembers] = useState<any[]>([]);
@@ -26,21 +24,21 @@ export const ChatArea = (props: Props) => {
     const [photo, setPhoto] = useState<string>('');
 
     // Get chat
-    const getChatDetail = async () => {
-        await axios.get(`/api/chats/${props.chatId}`)
-            .then((res) => {
-                setChat(res.data);
-                setOtherMembers(res.data.members?.filter((member: any) => member._id !== currentUser?._id))
-            })
-            .catch((error) => {
-            });
-        setLoading(false);
-    }
+   
 
     useEffect(() => {
-        if (!currentUser || !props.chatId) return;
+        const getChatDetail = async () => {
+            await axios.get(`/api/chats/${props.chatId}`)
+                .then((res) => {
+                    setChat(res.data);
+                    const members:any[] = res.data.members;
+                    setOtherMembers(members?.filter((member: any) => member._id !== currentUser?._id))
+                })
+                .catch((error) => {
+                });
+        }
         getChatDetail();
-    }, [currentUser, props.chatId])
+    }, [currentUser?._id, props.chatId])
 
     // Scroll to bottom
     const bottomMessageRef = useRef<HTMLDivElement>(null);
@@ -57,7 +55,6 @@ export const ChatArea = (props: Props) => {
     useEffect(() => {
         pusherClient.subscribe(`chat-${props.chatId}`);
         pusherClient.bind(`new-message`, (message: any) => {
-            console.log("new message", message);
             setChat((prevChat: any) => {
                 return {
                     ...prevChat,

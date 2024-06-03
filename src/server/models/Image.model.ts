@@ -5,6 +5,10 @@ const ImageSchema = new Schema({
         type: String,
         required: true
     },
+    type: {
+        type: String,
+        required: true
+    },
     url: {
         type: String,
         required: true,
@@ -25,6 +29,7 @@ const Image = mongoose.models.Image || mongoose.model<IImage>('Image', ImageSche
 
 export interface IImage extends Document{
     name: string;
+    type: string;
     url: string;
     path: string;
     owner: string;
