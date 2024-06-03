@@ -5,7 +5,7 @@
 import { NextResponse } from "next/server";
 import Message from "../models/Message.model";
 import { pusherServer } from "@/lib/pusher";
-import Chat from "../models/Chat.model";
+import Chat, { IChat } from "../models/Chat.model";
 
 export class MessageService {
     private static instance: MessageService;
@@ -33,16 +33,23 @@ export class MessageService {
         }
 
         try {
-            let newMessage = new Message({
+            let message = new Message({
                 chat: chatId,
                 sender,
                 photo,
                 text,
                 seenBy
             });
-            newMessage = await newMessage.save();
 
-            const updateChat = await Chat.findByIdAndUpdate(chatId, {
+            message = await message.save();
+
+            const newMessage = await Message.findById(message._id)
+                                            .populate('sender', '_id username email profileImage')
+                                            .exec();
+ 
+
+
+            const updateChat:IChat = await Chat.findByIdAndUpdate(chatId, {
                 $push: { messages: newMessage._id },
                 $set: { lastMessageAt: newMessage.createdAt }
             }, { new: true })
@@ -56,8 +63,13 @@ export class MessageService {
                 })
                 .sort({ lastMessageAt: -1 })
                 .exec();
-
+                
+            // pusher notification to all chat members
             await pusherServer.trigger(`chat-${chatId}`, 'new-message', newMessage);
+
+            updateChat.members.forEach(async (member) => {
+                await pusherServer.trigger(`chatList-${member._id}`, 'message', "");
+            });
 
             return NextResponse.json(updateChat, { status: 200 });
         } catch (error: any) {

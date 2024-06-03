@@ -1,14 +1,15 @@
 import { useAppContext } from "@/app/AppProvvider";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card"
+import { Card, CardFooter, CardHeader } from "./ui/card"
 import { Textarea } from "./ui/textarea";
 import { IoIosSend } from "react-icons/io";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { formatDate } from "./ChatBox";
 import { ScrollArea } from "./ui/scroll-area";
 import { pusherClient } from "@/lib/pusher";
 import SpinperBasic from "./spinpers/spinper-basic";
+import  { groupImage, personImage } from "@/lib/system.property";
 
 type Props = {
     chatId: string | string[] | undefined;
@@ -56,7 +57,7 @@ export const ChatArea = (props: Props) => {
     useEffect(() => {
         pusherClient.subscribe(`chat-${props.chatId}`);
         pusherClient.bind(`new-message`, (message: any) => {
-
+            console.log("new message", message);
             setChat((prevChat: any) => {
                 return {
                     ...prevChat,
@@ -77,25 +78,23 @@ export const ChatArea = (props: Props) => {
         const url = `/api/messages`;
 
         const body = {
-            chat: props.chatId,
+            chatId: props.chatId,
             sender: currentUser?._id,
             text,
             photo,
             seedBy: []
         }
 
-        console.log(body);
-
-        // await axios.post(url, body)
-        //     .then((res) => {
-        //         setChat(res.data);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
-
-        setText('');
+        await axios.post(url, body)
+            .then((res) => {
+                setChat(res.data);
+                setText('');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
+
 
     return !chat ? <SpinperBasic /> : (
         <>
@@ -103,14 +102,14 @@ export const ChatArea = (props: Props) => {
                 <CardHeader className=" z-20 absolute top-0 w-full h-24 text-xl flex-row items-center p-4">
                     {chat?.isGroup ? (
                         <Avatar className="size-16 me-4">
-                            <AvatarImage src={chat.groupImage || '/images/commons/group.jpg'} alt="avatar" />
+                            <AvatarImage src={chat.groupImage || groupImage} alt="avatar" />
                             <AvatarFallback>GR</AvatarFallback>
                         </Avatar>
                     ) : (
                         <>
                             {otherMembers && (
                                 <Avatar className="size-16 me-4">
-                                    <AvatarImage src={otherMembers[0]?.profileImage || '/images/commons/person.webp'} alt="avatar" />
+                                    <AvatarImage src={otherMembers[0]?.profileImage || personImage} alt="avatar" />
                                     <AvatarFallback>MEM</AvatarFallback>
                                 </Avatar>
                             )}
@@ -129,13 +128,13 @@ export const ChatArea = (props: Props) => {
                                         </span>
                                         <div className="bg-blue-500 p-2 rounded-3xl text-white  max-w-[50rem] " >
                                             {message.text}
-                                        </div>
+                                        </div> 
                                     </div>
                                 ) : (
                                     <div className="flex items-center space-x-4">
                                         <div className="h-full">
                                             <Avatar className="size-10 shadow shadow-gray-300">
-                                                <AvatarImage src={message.sender.profileImage || '/images/commons/person.webp'} alt="avatar" />
+                                                <AvatarImage src={message.sender.profileImage || personImage} alt="avatar" />
                                                 <AvatarFallback>MEM</AvatarFallback>
                                             </Avatar>
                                         </div>

@@ -1,6 +1,9 @@
 import { useAppContext } from "@/app/AppProvvider";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import Link from "next/link";
+import { groupImage, personImage } from "@/lib/system.property";
+import { useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher";
 
 type Props = {
     chat: any;
@@ -9,14 +12,15 @@ type Props = {
 export function ChatBox({ chat }: Props) {
     const { currentUser } = useAppContext();
     const otherMembers = chat?.members?.filter((member: any) => member._id !== currentUser?._id);
-    const messages = chat?.messages;
+    const messages= chat.messages;
+
     return (
         <Link href={`/chats/${chat._id}`} className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
             <div className="flex flex-1 space-x-4">
                 {
                     chat?.isGroup ? (
                         <Avatar className="size-20">
-                            <AvatarImage src={chat.groupImage || '/images/commons/group.jpg'} alt="avatar" />
+                            <AvatarImage src={chat.groupImage || groupImage} alt="avatar" />
                             <AvatarFallback>GR</AvatarFallback>
                         </Avatar>
                     ) : (
@@ -24,7 +28,7 @@ export function ChatBox({ chat }: Props) {
                             {
                                 otherMembers && (
                                     <Avatar className="size-20">
-                                        <AvatarImage src={otherMembers[0].profileImage || '/images/commons/person.webp'} alt="avatar" />
+                                        <AvatarImage src={otherMembers[0].profileImage || personImage} alt="avatar" />
                                         <AvatarFallback>MEM</AvatarFallback>
                                     </Avatar>
                                 )
@@ -65,7 +69,7 @@ export function ChatBox({ chat }: Props) {
                         {chat?.isGroup && chat?.members.map((member: any) => {
                             return (
                                 <Avatar key={member._id} className="size-6 border border-gray-400 shadow-sm shadow-gray-300">
-                                        <AvatarImage src={member.profileImage || '/images/commons/person.webp'} alt="avatar" />
+                                        <AvatarImage src={member.profileImage || personImage} alt="avatar" />
                                         <AvatarFallback>MEM</AvatarFallback>
                                 </Avatar>
                             )

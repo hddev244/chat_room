@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { IUser } from "./User.model";
 
 const MessageSchema = new Schema({
     chat: {
@@ -33,7 +34,7 @@ const Message =  mongoose.models.Message || mongoose.model<IMessage>('Message', 
 
 export interface IMessage extends Document{
     chat?: string;
-    sender?: string;
+    sender?: IUser;
     photo?: string;
     text?: string;
     createdAt?: Date;

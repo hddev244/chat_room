@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "../mongodb";
 import Chat, { IChat } from "../models/Chat.model";
 import { UserService } from "./user.service";
-import User from "../models/User.model";
+import User, { IUser } from "../models/User.model";
 
 export class ChatService {
     private static instance: ChatService;
@@ -31,12 +31,15 @@ export class ChatService {
 
             let chatFound = await Chat.findOne(query);
 
+
             if (!chatFound) {
+                console.log('chat not found');
                 chatFound = await new Chat(
                     chat.isGroup ? query : { members: [currentUserId, ...(chat.members ?? [])] }
                 );
 
-                chatFound = await chatFound.save();
+                chatFound = await chatFound.save()
+                                    .populate('members', '_id username email profileImage');
 
                 await User.findByIdAndUpdate(currentUserId,
                     {
@@ -45,8 +48,8 @@ export class ChatService {
                     { new: true }
                 );
 
-                chat.members.forEach(async (member: string) => {
-                    await User.findByIdAndUpdate(member,
+                chat.members.forEach(async (member: IUser) => {
+                    await User.findByIdAndUpdate(member._id,
                         {
                             $addToSet: { chats: chatFound._id }
                         },
@@ -86,6 +89,29 @@ export class ChatService {
             return NextResponse.json({
                 message: "Lỗi server, không thể lấy dữ liệu chat!",
             }, { status: 500 });
+        }
+    }
+
+    public async getChatById(chatId: string): Promise<NextResponse> {
+        try {
+            await connectToDatabase();
+
+            const chatFound = await Chat.findById(chatId)
+                .populate({ path: 'members', select: '_id username email profileImage' })
+                .populate(
+                    {
+                        path: 'messages',
+                        populate: {
+                            path: 'sender',
+                            select: '_id username email profileImage'
+                        }
+                    }
+                )
+                .exec();
+
+            return NextResponse.json(chatFound, { status: 200 });
+        } catch (error:any) {
+            return NextResponse.json({ message: error.message }, { status: 500 });
         }
     }
 }

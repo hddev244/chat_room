@@ -1,4 +1,5 @@
 import mongoose,{Document, Schema} from "mongoose";
+import { IUser } from "./User.model";
 
 const ChatSchema = new Schema({
     members: {
@@ -34,7 +35,7 @@ const ChatSchema = new Schema({
 const Chat = mongoose.models.Chat || mongoose.model<IChat>('Chat', ChatSchema);
 
 export interface IChat extends Document{
-    members: any[] ;
+    members: IUser[] ;
     messages?: any[];
     name?: string;
     isGroup: boolean;

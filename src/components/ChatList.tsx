@@ -8,14 +8,24 @@ import SpinperBasic from "./spinpers/spinper-basic";
 import { IChat } from "@/server/models/Chat.model";
 import { Input } from "./ui/input";
 import { ChatBox } from "./ChatBox";
+import { pusherClient } from "@/lib/pusher";
+import { toast } from "sonner";
 
-const ChatList: NextPage = () => {
+type Props = {
+  curentUserId?: string | null;
+}
+
+const ChatList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [chats, setChats] = useState<any[]>([]);
-  const { currentUser } = useAppContext();
   const [search, setSearch] = useState<string>('');
+  const { currentUser } = useAppContext();
 
   const getChats = async () => {
+    if (!currentUser?._id) {
+      toast('User not found')
+      return;
+    };
     try {
       const url = `/api/users/${currentUser?._id}/chats`;
       axios.get(url)
@@ -30,7 +40,19 @@ const ChatList: NextPage = () => {
   }
 
   useEffect(() => {
-    if (currentUser) getChats();
+    pusherClient.subscribe(`chatList-${currentUser?._id}`);
+    pusherClient.bind(`message`, () => {
+      getChats();
+    });
+
+    return () => {
+      pusherClient.unsubscribe(`chatList-${currentUser?._id}`);
+      pusherClient.unbind(`message`);
+    }
+  },[currentUser?._id])
+
+  useEffect(() => {
+    if (currentUser?._id) getChats();
   }, []);
 
   return (loading ? <SpinperBasic /> :

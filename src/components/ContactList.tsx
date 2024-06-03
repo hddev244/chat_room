@@ -14,6 +14,7 @@ import { Checkbox } from "./ui/checkbox";
 import { toast } from "sonner";
 import SpinperBasic from "./spinpers/spinper-basic";
 import { useRouter } from "next/navigation";
+import { personImage } from "@/lib/system.property";
 
 const ContactList: NextPage = () => {
   const { currentUser } = useAppContext();
@@ -75,7 +76,6 @@ const ContactList: NextPage = () => {
     }
     await axios.post('/api/chats', payload)
       .then((res) => {
-        toast('Chat created successfully');
         setTimeout(() => {
           router.push(`/chats/${res.data._id}`);
         }, 1000)
@@ -106,7 +106,7 @@ const ContactList: NextPage = () => {
               <ScrollArea className="h-[38rem] p-1">
                 {
                   contacts && contacts.map((contact: IUser) => (
-                    <div key={contact._id}  className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
+                    <div key={contact._id} className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
 
                       <div className="flex items-center space-x-8">
                         <Checkbox
@@ -116,8 +116,8 @@ const ContactList: NextPage = () => {
                             handleSelectContact(contact);
                           }} />
                         <Avatar className="size-20" >
-                          <AvatarImage src={contact.profileImage || '/images/commons/persion.webp'} alt="avatar" />
-                          <AvatarFallback></AvatarFallback>
+                          <AvatarImage src={contact.profileImage || personImage} alt="avatar" />
+                          <AvatarFallback>M</AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <label htmlFor={contact._id}>

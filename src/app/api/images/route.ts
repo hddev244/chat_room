@@ -3,7 +3,7 @@ import fs, { writeFile } from "fs/promises";
 import path from "path";
 import { cookies } from "next/headers";
 import { parseJwt } from "@/server/libs/auth";
-import Image from "@/server/models/Image";
+import Image from "@/server/models/Image.model";
 
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
