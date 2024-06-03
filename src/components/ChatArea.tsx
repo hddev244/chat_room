@@ -23,6 +23,49 @@ export const ChatArea = (props: Props) => {
     const [text, setText] = useState<string>('');
     const [photo, setPhoto] = useState<string>('');
 
+    const formRef = useRef<HTMLFormElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                formRef.current?.submit();
+            }
+        };
+
+        const textarea = textareaRef.current;
+        textarea?.addEventListener('keydown', handleKeyDown);
+
+        console.log(textareaRef.current);
+
+        return () => {
+            textarea?.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
+    const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+        if (text.trim() === '') return;
+        const url = `/api/messages`;
+
+        const body = {
+            chatId: props.chatId,
+            sender: currentUser?._id,
+            text,
+            photo,
+            seedBy: []
+        }
+
+        await axios.post(url, body)
+            .then((res) => {
+                setChat(res.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        setText('');
+    }
+
     // Get chat
    
 
@@ -70,27 +113,7 @@ export const ChatArea = (props: Props) => {
     }, [props.chatId]);
 
     // handleSendMessage function
-    const handleSendMessage = async () => {
-        if (text.trim() === '') return;
-        const url = `/api/messages`;
-
-        const body = {
-            chatId: props.chatId,
-            sender: currentUser?._id,
-            text,
-            photo,
-            seedBy: []
-        }
-
-        await axios.post(url, body)
-            .then((res) => {
-                setChat(res.data);
-                setText('');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+   
 
 
     return !chat ? <SpinperBasic /> : (
@@ -149,16 +172,19 @@ export const ChatArea = (props: Props) => {
                         <div ref={bottomMessageRef} ></div>
                     </div>
                 </ScrollArea>
-                <CardFooter className="absolute bottom-0 border-t h-28 w-full flex space-x-2 p-2 pt-2">
-                    <Textarea
-                        className="rounded-bl-3xl"
-                        placeholder="Type a message"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                    />
-                    <button onClick={handleSendMessage}>
-                        <IoIosSend className=" border-2 rounded-full text-blue-500 p-2 text-[4rem] hover:scale-110 hover:shadow dark:hover:shadow-blue-300 dark:hover:text-blue-300 hover:shadow-blue-600 hover:text-blue-600 transition-transform duration-300 ease-in-out" />
-                    </button>
+                <CardFooter className="absolute bottom-0 border-t h-28 w-full flex  p-2 pt-2">
+                    <form ref={formRef}  className="flex flex-1 space-x-2" onSubmit={handleSendMessage}>
+                        <Textarea
+                            ref={textareaRef}
+                            className="rounded-bl-3xl"
+                            placeholder="Type a message"
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                        />
+                        <button >
+                            <IoIosSend className=" border-2 rounded-full text-blue-500 p-2 text-[4rem] hover:scale-110 hover:shadow dark:hover:shadow-blue-300 dark:hover:text-blue-300 hover:shadow-blue-600 hover:text-blue-600 transition-transform duration-300 ease-in-out" />
+                        </button>
+                        </form>
                 </CardFooter>
             </Card>
         </>

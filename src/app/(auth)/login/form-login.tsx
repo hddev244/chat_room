@@ -54,9 +54,7 @@ export default function FormLogin() {
                     {   
                         description: res.data.message,
                     })
-                setTimeout(() => {
                     router.push("/")
-                }, 500)
             })
             .catch(err => {
                 toast("Lỗi máy chủ, vui lòng thử lại sau!", {
