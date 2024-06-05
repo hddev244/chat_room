@@ -30,21 +30,19 @@ export const ChatArea = (props: Props) => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
-                formRef.current?.submit();
+                formRef.current?.dispatchEvent(new Event('submit', { bubbles: true }));
             }
         };
 
         const textarea = textareaRef.current;
         textarea?.addEventListener('keydown', handleKeyDown);
-
-        console.log(textareaRef.current);
-
         return () => {
             textarea?.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
 
     const handleSendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         if (text.trim() === '') return;
         const url = `/api/messages`;
 
@@ -142,12 +140,12 @@ export const ChatArea = (props: Props) => {
                         {chat?.messages?.map((message: any) => (
                             <div key={message._id} className={`flex ${message.sender._id === currentUser?._id ? "justify-end" : "justify-start"}`}>
                                 {message.sender._id === currentUser?._id ? (
-                                    <div className="flex items-center space-x-4">
+                                    <div className="flex items-center  space-x-4">
                                         <span >
                                             {formatDate(message.createdAt, 7)}
                                         </span>
-                                        <div className="bg-blue-500 p-2 rounded-3xl text-white  max-w-[50rem] " >
-                                            {message.text}
+                                        <div className="bg-blue-500 py-2 px-4  rounded-md text-white  max-w-[50rem] " >
+                                            {message.text.split('\n').map((line:any, index:any) => <p key={index}>{line}</p>)}
                                         </div> 
                                     </div>
                                 ) : (
@@ -158,8 +156,8 @@ export const ChatArea = (props: Props) => {
                                                 <AvatarFallback>MEM</AvatarFallback>
                                             </Avatar>
                                         </div>
-                                        <div className="dark:bg-[#7c7c7c7a] bg-white p-2 rounded-3xl  max-w-[50rem] ">
-                                            {message.text}
+                                        <div className="dark:bg-[#7c7c7c7a] bg-white p-2 rounded-md  max-w-[50rem] ">
+                                        {message.text.split('\n').map((line:any, index:any) => <p key={index}>{line}</p>)}
                                         </div>
                                         <span >
                                             {formatDate(message.createdAt, 7)}
@@ -181,7 +179,7 @@ export const ChatArea = (props: Props) => {
                             value={text}
                             onChange={(e) => setText(e.target.value)}
                         />
-                        <button >
+                        <button type="submit" >
                             <IoIosSend className=" border-2 rounded-full text-blue-500 p-2 text-[4rem] hover:scale-110 hover:shadow dark:hover:shadow-blue-300 dark:hover:text-blue-300 hover:shadow-blue-600 hover:text-blue-600 transition-transform duration-300 ease-in-out" />
                         </button>
                         </form>

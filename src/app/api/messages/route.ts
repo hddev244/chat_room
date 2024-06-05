@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest): Promise<NextResponse>  => {
     const { chatId, sender, photo, text, seedBy } = await req.json();
 
+    console.log('chatId', chatId);
+
     return MessageService.getInstance().createMessage(chatId, sender, photo, text, seedBy);
 }
 

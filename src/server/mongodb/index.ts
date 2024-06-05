@@ -4,6 +4,7 @@ import Message from '../models/Message.model';
 import Chat from '../models/Chat.model';
 import fs from 'fs';
 import path from 'path';
+import Image from '../models/Image.model';
 
 let isConnected:boolean = false;
 
@@ -36,4 +37,5 @@ const registerModels = () => {
     User.init();
     Chat.init();
     Message.init();
+    Image.init();
 }
