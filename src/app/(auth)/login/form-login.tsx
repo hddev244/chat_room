@@ -6,7 +6,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { set } from "mongoose";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -28,7 +27,7 @@ const formSchema = z.object({
 
 export default function FormLogin() {
     const router = useRouter();
-    const { setCurrentUser,setToken } = useAppContext();
+    const {setCurrentUser,setToken} = useAppContext();
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -47,14 +46,13 @@ export default function FormLogin() {
         axios.post("/api/auth/login", payload)
             .then(res => {
                 const { user, token } = res.data;
-                setCurrentUser(user);
-                setToken(token);
-                console.log(res.data);
                 toast("Đăng nhập thành công!",
                     {   
                         description: res.data.message,
                     })
-                    router.push("/")
+                setCurrentUser(user)
+                setToken(token)
+                window.location.reload();
             })
             .catch(err => {
                 toast("Lỗi máy chủ, vui lòng thử lại sau!", {

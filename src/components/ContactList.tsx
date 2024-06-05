@@ -78,6 +78,7 @@ const ContactList: NextPage = () => {
     await axios.post('/api/chats', payload)
       .then((res) => {
         setTimeout(() => {
+          router.refresh();
           router.push(`/chats/${res.data._id}`);
         }, 1000)
       })
