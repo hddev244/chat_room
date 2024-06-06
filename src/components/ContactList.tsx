@@ -77,12 +77,7 @@ const ContactList: NextPage = () => {
     }
     await axios.post('/api/chats', payload)
       .then((res) => {
-        const navigate = setTimeout(() => {
-          router.refresh();
-          router.push(`/chats/${res.data._id}`);
-        }, 100)
-
-        return () => clearTimeout(navigate);
+        window.location.href = `/chats/${res.data._id}`;
       })
       .catch((error) => {
         console.error(error);
