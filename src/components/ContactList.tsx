@@ -102,7 +102,7 @@ const ContactList: NextPage = () => {
               <CardTitle>Select or Deselect</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 w-full">
-              <ScrollArea className="h-[38rem] p-1">
+              <ScrollArea className="h-full p-1 scrollbar_hidden">
                 {
                   contacts && contacts.map((contact: IUser) => (
                     <div key={contact._id as string} className="h-24 rounded-3xl hover:bg-[#afafaf63] flex items-center px-2 ">
