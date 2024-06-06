@@ -10,6 +10,7 @@ import { Input } from "./ui/input";
 import { ChatBox } from "./ChatBox";
 import { pusherClient } from "@/lib/pusher";
 import { toast } from "sonner";
+import { ScrollArea } from "./ui/scroll-area";
 
 type Props = {
   curentUserId?: string | null;
@@ -83,17 +84,19 @@ const ChatList = () => {
           placeholder="search contacts..." />
       </div>
       <div className="w-full flex-1 gap-8">
-        <Card className="flex flex-col">
+        <Card className="flex flex-col size-full">
           <CardHeader>
             <CardTitle>Chats</CardTitle>
           </CardHeader>
-          <CardContent>
-            {
+          <CardContent className="flex-1 w-full ">
+            <ScrollArea className="h-full w-full scrollbar_hidden ">
+              {
               chats.map((chat) => (
                 <ChatBox key={chat._id} chat={chat} />
               ))
             }
-          </CardContent>
+            </ScrollArea>
+          </CardContent>          
         </Card>
       </div>
     </div>

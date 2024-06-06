@@ -135,7 +135,7 @@ export const ChatArea = (props: Props) => {
                     )}
                     {(chat && chat?.isGroup) ? chat?.name : chat?.members?.filter((member: any) => member._id !== currentUser?._id)[0].username}
                 </CardHeader>
-                <ScrollArea className=" !absolute bottom-28 w-full h-[calc(100%-13rem)] max-h-[calc(100%-13rem)] overflow-y-scroll   bg-[#72727225]">
+                <ScrollArea className="scrollbar_hidden  !absolute bottom-28 w-full h-[calc(100%-13rem)] max-h-[calc(100%-13rem)] overflow-y-scroll   bg-[#72727225]">
                     <div className="flex flex-col justify-end space-y-2 p-2 ">
                         {chat?.messages?.map((message: any) => (
                             <div key={message._id} className={`flex ${message.sender._id === currentUser?._id ? "justify-end" : "justify-start"}`}>

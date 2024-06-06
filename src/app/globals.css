@@ -105,3 +105,30 @@
       @apply bg-background text-foreground;
     }
   }
+
+  /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #d6d6d6;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #858585;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3e454c;
+}
+
+.scrollbar_hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
