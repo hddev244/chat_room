@@ -77,10 +77,12 @@ const ContactList: NextPage = () => {
     }
     await axios.post('/api/chats', payload)
       .then((res) => {
-        setTimeout(() => {
+        const navigate = setTimeout(() => {
           router.refresh();
           router.push(`/chats/${res.data._id}`);
-        }, 1000)
+        }, 100)
+
+        return () => clearTimeout(navigate);
       })
       .catch((error) => {
         console.error(error);
