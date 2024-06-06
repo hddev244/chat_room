@@ -31,6 +31,7 @@ export class ChatService {
 
             let chatFound = await Chat.findOne(query);
 
+            console.log('chatFound', chatFound);
 
             if (!chatFound) {
                 console.log('chat not found');
@@ -38,8 +39,10 @@ export class ChatService {
                     chat.isGroup ? query : { members: [currentUserId, ...(chat.members ?? [])] }
                 );
 
-                chatFound = await chatFound.save()
-                                    .populate('members', '_id username email profileImage');
+                chatFound = await chatFound.save();
+
+                chatFound = await Chat.findById(chatFound._id)
+                                        .populate('members','_id username email profileImage')
 
                 await User.findByIdAndUpdate(currentUserId,
                     {
@@ -56,7 +59,7 @@ export class ChatService {
                         { new: true })
                 });
             }
-
+            console.log('chatFound--------', chatFound);
             return NextResponse.json(chatFound, { status: 200 });
         } catch (error) {
             return NextResponse.json({
