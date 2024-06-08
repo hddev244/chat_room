@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { parseJwt } from "@/server/libs/auth";
 import { IUser } from "@/server/models/User.model";
+import { BottomBar } from "@/components/bottom-bar";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -16,13 +16,12 @@ import SpinperBasic from "./spinpers/spinper-basic";
 import { useRouter } from "next/navigation";
 import { personImage } from "@/lib/system.property";
 
+
 const ContactList: NextPage = () => {
   const { currentUser } = useAppContext();
   const [loading, setLoading] = useState<boolean>(true);
   const [contacts, setContacts] = useState<any[]>([]);
   const [searchContactValue, setSearchContactValue] = useState<string>('');
-
-  
 
   useEffect(() => {
     const getContacts = async () => {
@@ -87,7 +86,8 @@ const ContactList: NextPage = () => {
 
   return (loading ? <SpinperBasic /> :
     <>
-      <div className="size-full flex flex-col space-y-4">
+      <div className="size-full flex flex-col space-y-4 lg:col-span-2">
+        {/* search contact block */}
         <div className="w-full">
           <Input
             type="text"
@@ -96,7 +96,7 @@ const ContactList: NextPage = () => {
             onChange={(e) => setSearchContactValue(e.target.value)}
             placeholder="search contacts..." />
         </div>
-        <div className="w-full flex-1 grid grid-cols-2 gap-8">
+        <div className="w-full flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Select or Deselect</CardTitle>
@@ -131,7 +131,7 @@ const ContactList: NextPage = () => {
               </ScrollArea>
             </CardContent>
           </Card>
-          <div className="px-4 space-y-4">
+          <div className="lg:px-4  space-y-4">
             <Card className="">
               {
                 selectedContact.length > 1 && (
@@ -166,7 +166,7 @@ const ContactList: NextPage = () => {
             </Card>
             <Button
               onClick={createGroupChat}
-              className="w-full text-3xl uppercase !py-8">Start a new chat</Button>
+              className="w-full text:xl lg:text-3xl uppercase !lg:py-8">Start a new chat</Button>
           </div>
         </div>
       </div>

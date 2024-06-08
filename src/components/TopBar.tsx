@@ -31,21 +31,21 @@ const TopBar = () => {
     }
     return (
         <div className="flex w-full h-24 p-4 border-b bg-card text-card-foreground shadow-sm">
-            <div className="flex-1">
+            <div className="flex-1 flex items-center">
                 <Link href="/">
-                    <h1 className="text-5xl font-semibold cursor-pointer">HD Chat</h1>
+                    <h1 className=" text-2xl lg:text-5xl font-semibold cursor-pointer">HD Chat</h1>
                 </Link>
             </div>
-            <div className="flex items-center space-x-8 text-3xl font-semibold">
-                <Link
+            <div className="flex items-center space-x-8 lg:text-3xl font-semibold">
+                {/* <Link
                     href="/chats"
-                    className={`${pathName === '/chats' ? 'text-red-500' : ''}`}>
+                    className={`hidden ${pathName === '/chats' ? 'text-red-500' : ''}`}>
                     Chats
                 </Link>
                 <Link href="/contacts"
                     className={`${pathName === '/contacts' ? 'text-red-500' : ''}`}>
                     Contacts
-                </Link>
+                </Link> */}
                 <button 
                     className="text-red-500"
                     onClick={handleLogout}
