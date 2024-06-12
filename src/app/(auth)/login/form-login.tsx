@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { IUser } from "@/server/models/User.model";
+import { currentUserStore, tokenStore } from "@/store/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
@@ -27,7 +29,7 @@ const formSchema = z.object({
 
 export default function FormLogin() {
     const router = useRouter();
-    const {setCurrentUser,setToken} = useAppContext();
+    const setCurrentUser = currentUserStore((state:any) => state.setCurrentUser);
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -37,6 +39,10 @@ export default function FormLogin() {
         },
     })
 
+    const updateUser = currentUserStore((state:any) => state.updateUser);
+    
+    const setToken = tokenStore((state:any) => state.setToken);
+
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
         const payload = {
@@ -45,18 +51,18 @@ export default function FormLogin() {
         }
         axios.post("/api/auth/login", payload)
             .then(res => {
-                const { user, token } = res.data;
+                const { user, token }:{user:IUser,token:string} = res.data;
                 toast("Đăng nhập thành công!",
                     {   
                         description: res.data.message,
                     })
-                setCurrentUser(user)
+                updateUser(user);
                 setToken(token)
                 window.location.reload();
             })
             .catch(err => {
                 toast("Lỗi máy chủ, vui lòng thử lại sau!", {
-                    description: err.response.data.message,
+                    description: err,
                 })
             })
     }

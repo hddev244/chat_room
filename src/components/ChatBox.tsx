@@ -4,13 +4,14 @@ import Link from "next/link";
 import { groupImage, personImage } from "@/lib/system.property";
 import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher";
+import { currentUserStore } from "@/store/user";
 
 type Props = {
     chat: any;
 }
 
 export function ChatBox({ chat }: Props) {
-    const { currentUser } = useAppContext();
+    const currentUser = currentUserStore((state:any) => state.currentUser);
     const otherMembers = chat?.members?.filter((member: any) => member._id !== currentUser?._id);
     const messages= chat.messages;
 

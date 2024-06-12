@@ -1,11 +1,18 @@
+import { IUser } from '@/server/models/User.model';
 import {create} from 'zustand';
 
-const userStore = create((set) => ({
-    user: {
-        name: 'John Doe',
-        age: 25,
-    },
-    updateUser: (name: string, age: number) => set(() => ({user: {name, age}})),
+const currentUserStore = create((set) => ({
+    currentUser: {},
+    updateUser: (currentUser : IUser | {} ) => set(() => ({currentUser: currentUser})),
+    updateProfileImage: (profileImage: string) => set((state : IUser) => ({
+        currentUser: {...state, profileImage}
+    })),
+
 }));
 
-export {userStore};
+const tokenStore = create((set) => ({
+    token: '',
+    setToken: (token: string) => set(() => ({token:token})),
+}));
+
+export {currentUserStore, tokenStore};

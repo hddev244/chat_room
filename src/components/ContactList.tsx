@@ -15,10 +15,11 @@ import { toast } from "sonner";
 import SpinperBasic from "./spinpers/spinper-basic";
 import { useRouter } from "next/navigation";
 import { personImage } from "@/lib/system.property";
+import { currentUserStore } from "@/store/user";
 
 
 const ContactList: NextPage = () => {
-  const { currentUser } = useAppContext();
+  const  currentUser = currentUserStore((state:any) => state.currentUser);
   const [loading, setLoading] = useState<boolean>(true);
   const [contacts, setContacts] = useState<any[]>([]);
   const [searchContactValue, setSearchContactValue] = useState<string>('');

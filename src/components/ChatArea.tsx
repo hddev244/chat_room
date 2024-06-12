@@ -10,13 +10,14 @@ import { ScrollArea } from "./ui/scroll-area";
 import { pusherClient } from "@/lib/pusher";
 import SpinperBasic from "./spinpers/spinper-basic";
 import  { groupImage, personImage } from "@/lib/system.property";
+import { currentUserStore } from "@/store/user";
 
 type Props = {
     chatId: string | string[] | undefined;
 }
 
 export const ChatArea = (props: Props) => {
-    const { currentUser } = useAppContext();
+    const currentUser = currentUserStore((state:any) => state.currentUser);
     const [chat, setChat] = useState<any>({});
     const [otherMembers, setOtherMembers] = useState<any[]>([]);
     

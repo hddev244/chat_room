@@ -1,13 +1,22 @@
 'use client'
 
 import { IUser } from "@/server/models/User.model";
+import { currentUserStore, tokenStore } from "@/store/user";
 import { createContext, useContext, useState } from "react"
+import { create } from "zustand";
+
+// const AppContext = createContext({
+//     token: '',
+//     setToken: (token: string) => {},
+//     currentUser: {} as IUser | null,
+//     setCurrentUser: (user: IUser| null) => {}
+// });
+
+
 
 const AppContext = createContext({
-    token: '',
-    setToken: (token: string) => {},
-    currentUser: {} as IUser | null,
-    setCurrentUser: (user: IUser| null) => {}
+    currentUserStore: currentUserStore,
+    tokenStore: tokenStore
 });
 
 const useAppContext = () => {
@@ -27,10 +36,14 @@ const AppProvider = ({
     inititalToken?: string;
     inititalCurrentUser?: IUser | null;
 }) => {
-    const [token, setToken] = useState(inititalToken);
-    const [currentUser, setCurrentUser] = useState<IUser | null>(inititalCurrentUser); // Updated type and added default value
+    const updateUser = currentUserStore((state:any) => state.updateUser);
+    const setToken = tokenStore((state:any) => state.setToken);
+
+    updateUser(inititalCurrentUser);
+    setToken(inititalToken);
+
     return (
-        <AppContext.Provider value={{token,setToken,currentUser,setCurrentUser}}>
+        <AppContext.Provider value={{tokenStore,currentUserStore}}>
             {children }
         </AppContext.Provider>
         )

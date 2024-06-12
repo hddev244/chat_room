@@ -8,23 +8,25 @@ import { useAppContext } from "@/app/AppProvvider";
 import { toast } from "sonner";
 import { Card } from "./ui/card";
 import { ModeToggle } from "@/components/ModeToggle";
+import { currentUserStore } from "@/store/user";
 
 const TopBar = () => {
-    const { currentUser ,setCurrentUser } = useAppContext();
+    const currentUser = currentUserStore((state:any) => state.currentUser);
+    const updateUser = currentUserStore((state:any) => state.updateUser);
     const pathName = usePathname();
     const router = useRouter();
     const handleLogout = () => {
         axios.post("/api/auth/logout")
             .then(res => {
                 console.log(res.data.message);
-                setCurrentUser(null);
+                updateUser({});
                 router.push("/login");
             }
         )
         .catch(err => {
             toast("Logout failed", 
                 {
-                    description: err.response.data.message,
+                    description: err,
                 }
             )
         })

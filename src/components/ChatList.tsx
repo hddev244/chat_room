@@ -1,7 +1,5 @@
 'use client'
-import type { NextPage } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { useAppContext } from "@/app/AppProvvider";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SpinperBasic from "./spinpers/spinper-basic";
@@ -11,6 +9,7 @@ import { ChatBox } from "./ChatBox";
 import { pusherClient } from "@/lib/pusher";
 import { toast } from "sonner";
 import { ScrollArea } from "./ui/scroll-area";
+import { currentUserStore } from "@/store/user";
 
 type Props = {
   curentUserId?: string | null;
@@ -20,7 +19,7 @@ const ChatList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [chats, setChats] = useState<any[]>([]);
   const [search, setSearch] = useState<string>('');
-  const { currentUser } = useAppContext();
+  const currentUser = currentUserStore((state:any) => state.currentUser); 
 
   
 

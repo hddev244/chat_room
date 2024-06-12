@@ -3,7 +3,7 @@ import ChatList from "@/components/ChatList";
 import ContactList from "@/components/ContactList";
 import { BottomBar } from "@/components/bottom-bar";
 import { useState } from "react";
-import { userStore } from "@/store/user"
+import { currentUserStore } from "@/store/user"
 import { Button } from "@/components/ui/button";
 
 
@@ -13,22 +13,24 @@ export default function Home() {
     setMode(mode);
   }
 
-  const user = userStore((state:any) => state.user);
-  const updateUser = userStore((state:any) => state.updateUser);
+  const currentUser = currentUserStore((state:any) => state.user);
+  const updateUser = currentUserStore((state:any) => state.updateUser);
+  
+  console.log(currentUser);
 
   // check window size for responsive . width < 1024px => mobile
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 1024);
 
   return (
     <> 
-      <div className="flex justify-between items-center p-4">
+      {/* <div className="flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold">Chat App</h1>
         <div className="flex items-center">
           <p className="mr-2">{user.name}</p>
           <p>{user.age}</p>
         </div>
         <Button onClick={() => updateUser("Jane Doe 2", 30)}>Change User</Button>
-      </div>
+      </div> */}
       <div className="size-full flex flex-col">
           { isMobile ? (
             <>
