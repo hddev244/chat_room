@@ -18,13 +18,16 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useAppContext } from "../AppProvvider";
 import { IUser } from "@/server/models/User.model";
+import { currentUserStore } from "@/store/user";
 ''
 const formSchema = z.object({
     username: z.string().min(3).max(20),
 });
 
 const Page: NextPage = () => {
-    const { currentUser, setCurrentUser } = useAppContext();
+    const currentUser = currentUserStore((state: any) => state.currentUser);
+    const updateUser = currentUserStore((state: any) => state.updateUser);
+    
     const [avatarChangeUrl, setAvatarChangeUrl] = useState<string | null | undefined>(currentUser?.profileImage);
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -42,8 +45,7 @@ const Page: NextPage = () => {
         axios.put(`/api/users/${currentUser?._id}/update`, payload)
             .then((res) => {
                 const {user}:{user:IUser} = res.data;
-                console.log(user);
-                setCurrentUser(user);
+                updateUser(user);
                 toast("Cập nhật thông tin thành công");
                 window.location.reload();
             }).catch((err) => {
