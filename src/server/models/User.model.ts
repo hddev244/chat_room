@@ -23,7 +23,6 @@ const UserSchema = new mongoose.Schema({
         type : [{type : Schema.Types.ObjectId, ref : 'Chat'}],
         default : [],
     }
-
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
